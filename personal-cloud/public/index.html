@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuvola Personale</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c8cf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z'/></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== LOGIN SCREEN ==================== -->
+  <div id="login-view" class="login-view hidden">
+    <div class="decoro decoro-1"></div>
+    <div class="decoro decoro-2"></div>
+    <div class="login-card">
+      <div class="login-logo" id="login-logo"></div>
+      <h1 id="login-title">Nuvola Personale</h1>
+      <p class="login-sub">Sign in with your credentials to manage your files</p>
+      <form id="login-form" autocomplete="off">
+        <label class="campo">
+          <span class="campo-icona" id="login-ico-user"></span>
+          <input type="text" id="login-user" placeholder="Username" required autocomplete="username">
+        </label>
+        <label class="campo">
+          <span class="campo-icona" id="login-ico-lock"></span>
+          <input type="password" id="login-pass" placeholder="Password" required autocomplete="current-password">
+          <button type="button" id="toggle-pass" class="btn-icono occhio" title="Show password" aria-label="Show or hide the password"></button>
+        </label>
+        <div id="login-error" class="login-error nascosto"></div>
+        <button type="submit" id="login-btn">Sign in</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION ==================== -->
+  <div id="app-view" class="app hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-badge" id="sidebar-logo"></span>
+        <span class="logo-nome" id="brand-name">Nuvola Personale</span>
+        <button id="sidebar-close" class="btn-icono solo-mobile" title="Close menu"></button>
+      </div>
+
+      <div class="sidebar-azioni">
+        <button id="btn-upload-file" class="btn btn-primario btn-largo"><span>Upload file</span></button>
+        <button id="btn-upload-folder" class="btn btn-secondario btn-largo"><span>Upload folder</span></button>
+        <button id="btn-new-folder" class="btn btn-secondario btn-largo"><span>New folder</span></button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-sezione">Location</div>
+        <a href="#" id="nav-home" class="nav-voce attiva"><span class="nav-ico" id="nav-ico-home"></span><span>My files</span></a>
+        <div class="nav-sezione">Folders</div>
+        <div id="albero-cartelle" class="albero"></div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="spazio">
+          <div class="spazio-riga">
+            <span id="spazio-ico"></span>
+            <span id="spazio-usato">—</span>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn btn-ghost btn-largo"><span>Sign out</span></button>
+      </div>
+    </aside>
+    <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+
+    <!-- Main area -->
+    <div class="principale">
+      <header class="topbar">
+        <button id="btn-menu" class="btn-icono solo-mobile" title="Menu"></button>
+        <nav id="breadcrumb" class="breadcrumb"></nav>
+        <div class="ricerca">
+          <span class="ricerca-ico" id="ricerca-ico"></span>
+          <input type="search" id="search" placeholder="Search in this folder…">
+        </div>
+      </header>
+
+      <main class="contenuto">
+        <div id="empty-state" class="vuoto hidden">
+          <div class="vuoto-icona" id="vuoto-icona"></div>
+          <p class="vuoto-titolo">This folder is empty</p>
+          <p class="vuoto-testo">Drag and drop files or folders here, or use the Upload buttons in the sidebar.</p>
+        </div>
+        <div id="grid" class="griglia"></div>
+      </main>
+    </div>
+
+    <!-- Drag & drop area -->
+    <div id="dropzone" class="dropzone hidden">
+      <div class="dropzone-interna">
+        <div id="dropzone-icona" class="dropzone-icona"></div>
+          <p>Drop files or <strong>whole folders</strong> here to upload them</p>
+          <p class="dropzone-suggerimento">No browser window pops up while dragging</p>
+      </div>
+    </div>
+
+    <!-- Upload progress bar -->
+    <div id="upload-bar" class="upload-bar hidden">
+      <div class="upload-info">
+        <span id="upload-text">Uploading…</span>
+        <button id="upload-close" class="btn-icono" title="Hide"></button>
+      </div>
+      <div class="progresso"><div id="upload-progress" class="progresso-riemp"></div></div>
+    </div>
+
+    <!-- Image preview -->
+    <div id="lightbox" class="lightbox hidden">
+      <button id="lightbox-close" class="lightbox-chiudi" title="Close"></button>
+      <img id="lightbox-img" src="" alt="Image preview">
+      <div id="lightbox-name" class="lightbox-nome"></div>
+    </div>
+
+    <input type="file" id="input-file" multiple hidden>
+    <input type="file" id="input-folder" webkitdirectory hidden>
+
+    <!-- Dialog (rename / new folder / confirmations) -->
+    <div id="dialogo" class="dialogo hidden">
+      <div class="dialogo-card">
+        <div class="dialogo-icona" id="dialogo-icona"></div>
+        <h3 id="dialogo-titolo">Title</h3>
+        <p id="dialogo-testo" class="dialogo-testo hidden"></p>
+        <label id="dialogo-campo-wrap" class="campo dialogo-campo hidden">
+          <span class="campo-icona" id="dialogo-campo-ico"></span>
+          <input type="text" id="dialogo-input" placeholder="Name">
+        </label>
+        <div class="dialogo-bottoni">
+          <button id="dialogo-annulla" class="btn btn-ghost">Cancel</button>
+          <button id="dialogo-ok" class="btn btn-primario">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="icons.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

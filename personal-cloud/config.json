@@ -1,0 +1,7 @@
+{
+  "nomeCloud": "Nuvola Personale",
+  "username": "Username",
+  "password": "Password",
+  "porta": 3000,
+  "maxFileMB": 2048
+}
