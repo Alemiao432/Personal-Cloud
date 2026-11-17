@@ -1,0 +1,7 @@
+node_modules/
+.session-secret
+uploads/*
+!uploads/.gitkeep
+cloudflared
+cloudflared.exe
+cloudflared.tgz
